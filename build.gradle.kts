@@ -13,6 +13,7 @@ repositories {
 dependencies {
     implementation("net.minestom:minestom:2026.06.05-26.1.2")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.22.0")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.22.0")
 }
 
 tasks.shadowJar {
@@ -25,4 +26,9 @@ tasks.shadowJar {
             "Main-Class" to "dev.brominemc.bromine.Main"
         )
     }
+}
+
+
+tasks.build {
+    dependsOn(tasks.shadowJar)
 }

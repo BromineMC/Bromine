@@ -1,5 +1,6 @@
 package dev.brominemc.bromine.api.listener;
 
+import dev.brominemc.bromine.api.plugin.Plugin;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.event.EventListener;
 import net.minestom.server.event.GlobalEventHandler;
@@ -15,9 +16,11 @@ public class Listener {
     private static final GlobalEventHandler geh = MinecraftServer.getGlobalEventHandler();
     private static final Map<Class<? extends net.minestom.server.event.Event>, List<E>> registered = new ConcurrentHashMap<>();
 
+    private final Plugin plugin;
     private E listener;
 
-    public Listener() {
+    public Listener(Plugin plugin) {
+        this.plugin = plugin;
         for (Method method : getClass().getMethods()) {
             if (method.isAnnotationPresent(Event.class) && method.getParameterCount() == 1) {
                 Class<? extends net.minestom.server.event.Event> type = (Class<? extends net.minestom.server.event.Event>) method.getParameterTypes()[0];
@@ -47,10 +50,12 @@ public class Listener {
     }
 
     public void register() {
+        plugin.addListener(this);
         listener.active(true);
     }
 
     public void unregister() {
+        plugin.removeListener(this);
         listener.active(false);
     }
 
